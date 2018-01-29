@@ -1,0 +1,37 @@
+/**
+ * The "1. To Do" label added when message is Starred
+ */
+function _getToDoLabel() {
+
+  var todo_label_text = "1. To Do";
+  
+  var label = GmailApp.getUserLabelByName(todo_label_text);
+  
+  if (label == null) {
+    var label = GmailApp.createLabel(todo_label_text);
+  }
+  
+  return label;
+}
+
+function addToDoLabels() {
+  var label = _getToDoLabel();
+  
+  var threads = GmailApp.search('in:inbox label:Starred');
+  
+  for (var i = 0; i < threads.length; i++) {
+    label.addToThread(threads[i]);
+  }
+}
+
+function removeToDoLabels() {
+  var label = _getToDoLabel();
+  
+  var threads = GmailApp.search('label:1.-to-do ');
+  
+  for (var i = 0; i < threads.length; i++) {
+    if (threads[i].isInInbox() == false || threads[i].hasStarredMessages() == false) {
+      label.removeFromThread(threads[i]);
+    }
+  }
+}
